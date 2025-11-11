@@ -1,27 +1,19 @@
 {
-  "name": "proj",
-  "version": "1.0.0",
-  "main": "app.ts",
-  "scripts": {
-    "start": "nodemon --exec node --loader ts-node/esm app.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --exec node --loader ts-node/esm app.ts"
-  },
   "type": "module",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "main": "dist/app.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/app.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "dotenv": "^17.2.3",
+    "pg": "^8.16.3"
+  },
   "devDependencies": {
     "@types/express": "^5.0.5",
     "@types/node": "^24.10.0",
     "@types/pg": "^8.15.6",
-    "express": "^5.1.0",
-    "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
-  },
-  "dependencies": {
-    "dotenv": "^17.2.3",
-    "pg": "^8.16.3"
   }
 }

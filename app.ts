@@ -16,6 +16,12 @@ app.post("/data", async (req: Request, res: Response) => {
     const { name } = req.body;
     if (!name)
       return res.status(400).json({ message: "Name field is required." });
+
+    const result = await pool.query("SELECT name FROM items WHERE name=$1", [
+      name,
+    ]);
+    if (result.rows.length > 0)
+      return res.status(409).json({ message: "Item name already exists." });
     const { rows } = await pool.query(
       "INSERT INTO items(name) VALUES ($1) RETURNING *",
       [name]
