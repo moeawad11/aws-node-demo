@@ -11,6 +11,20 @@ app.get("/health", (req: Request, res: Response) => {
   res.json({ ok: true });
 });
 
+app.get("/filteritems", async (req, res) => {
+  try {
+    const { q } = req.query;
+    const search = `${q || ""}%`;
+    const result = await pool.query("SELECT * FROM items WHERE name ILIKE $1", [
+      search,
+    ]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error filtering item from database" });
+  }
+});
+
 app.post("/data", async (req: Request, res: Response) => {
   try {
     const { name } = req.body;
