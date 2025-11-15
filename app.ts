@@ -1,11 +1,15 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import { pool } from "./db.js";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 const app = express();
 app.use(express.json());
+
+const s3 = new S3Client({ region: "eu-north-1" });
+const BUCKET = process.env.BUCKET;
 
 app.get("/health", (req: Request, res: Response) => {
   res.json({ ok: true });
@@ -54,6 +58,29 @@ app.get("/items", async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error fetching items from database" });
+  }
+});
+
+app.post("/upload", async (req: Request, res: Response) => {
+  try {
+    if (!BUCKET)
+      return res.status(500).json({ message: "Bucket not configured." });
+
+    const body = Buffer.from("Hello from aws-node-demo");
+    const key = `test-${Date.now()}.txt`;
+
+    await s3.send(
+      new PutObjectCommand({
+        Bucket: BUCKET,
+        Key: key,
+        Body: body,
+        ContentType: "text/plain",
+      })
+    );
+    res.status(201).json({ message: "Uploaded", key });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error uploading to S3" });
   }
 });
 
