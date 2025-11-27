@@ -19,8 +19,8 @@ const s3 = new S3Client({
 const BUCKET = process.env.BUCKET;
 const upload = multer();
 
-app.get("/health", (req: Request, res: Response) => {
-  res.json({ ok: true });
+app.get("/", (req: Request, res: Response) => {
+  res.json({ message: "Hello There!" });
 });
 
 app.get("/filteritems", async (req, res) => {
